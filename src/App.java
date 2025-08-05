@@ -8,9 +8,47 @@ import models.Estudiante;
 
 public class App {
     public static void main(String[] args) throws Exception {
+                List<Estudiante> estudiantes = crearEstudiantes();
+        EstudianteController controller = new EstudianteController();
 
+        Set<Estudiante> ordenados = controller.ordenarPorPromedio(estudiantes);
+        System.out.println("====== Estudiantes ordenados por promedio ======");
+        int i = 1;
+        for (Estudiante e : ordenados) {
+            System.out.printf("%d.- %s\n", i++, e);
+        }
+
+        Map<String, List<Estudiante>> clasificados = controller.clasificarPorPorcentaje(ordenados);
+        System.out.println("\n====== Clasificación por porcentaje de caracteres únicos ======");
+        for (String categoria : clasificados.keySet()) {
+            System.out.print("- Categoría " + categoria + ": [ ");
+            for (Estudiante e : clasificados.get(categoria)) {
+                System.out.print(e.getNombre() + "; ");
+            }
+            System.out.println("]");
+        }
+
+        List<Estudiante> destacados = controller.obtenerEstudiantesDestacados(estudiantes);
+        System.out.println("\n====== Estudiantes destacados (promedio > 7.0) ======");
+        if (destacados.isEmpty()) {
+            System.out.println("No hay estudiantes destacados.");
+        } else {
+            for (Estudiante e : destacados) {
+                System.out.println("- " + e.getNombre());
+            }
+        }
+
+        String nombreBuscado = "Camila Vera";
+        Estudiante encontrado = controller.buscarPorNombre(destacados, nombreBuscado);
+        System.out.println("\n====== Buscar estudiante por nombre: \"" + nombreBuscado + "\" ======");
+        if (encontrado != null) {
+            System.out.println("Estudiante encontrado: " + encontrado);
+        } else {
+            System.out.println("Estudiante no encontrado.");
+        }
     }
 
+        
     static List<Estudiante> crearEstudiantes() {
         return Arrays.asList(
                 new Estudiante("Ana Torres", "0101010101", Arrays.asList(8.5, 9.0, 7.5, 10.0, 9.5, 8.0)),
